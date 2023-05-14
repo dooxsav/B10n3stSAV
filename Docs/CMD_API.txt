@@ -1,2 +1,8 @@
+*** SCRIPT de DEMARRAGE **
+Ce script permet le démarrage de l'application.
+Il commence par se localiser dans l'arborescence puis ouvre les consoles qui permettent de démarrer les api
+
+les commandes sont : 
+
 SET DEBUG=api-users:* & npm start (port 5000)
 SET DEBUG=api-security:* & npm start (port 5001)
