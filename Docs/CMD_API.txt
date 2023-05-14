@@ -1,0 +1,2 @@
+SET DEBUG=api-users:* & npm start (port 5000)
+SET DEBUG=api-security:* & npm start (port 5001)

@@ -1,0 +1,16 @@
+** Notes concernant la création de l'application **
+
+1 - Gestion des dossiers node_modules
+
+Dans le dossier API, création d'un seul dossier "node_modules". Les API tierces devront s'y referrer.
+
+Lors de la création d'un nouvelle API, il faut suivre les étapes suivantes :
+
+1/ Utiliser express-generator pour créer l'API
+2/ Supprimer le fichier node_modules nouvellement créer puis faire un lien symbolique vers le dossier node_modules du dossier parent :
+
+    cd my-express-apps/myapp1 (aller vers les fichier crééer)
+    rm -rf node_modules
+    ln -s ../node_modules node_modules
+
+3/ Revenir sur les fichier précédent puis installer les dépendances dans le fichier node_modules du dossier parents.
