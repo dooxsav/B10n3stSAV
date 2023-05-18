@@ -10,6 +10,9 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+//** WELCOME MSG */
+console.log('Démarrage API...')
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,6 +24,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // Sync db
+
+console.log('Tentative de synchonisation avec la base de données...')
 db.sequelize.sync({force: true}).then(
     res => {
         console.log('DB is SYNC AND READY!')
