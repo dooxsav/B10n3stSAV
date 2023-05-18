@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        /* Styles CSS */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+        }
+
+        .code {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Bienvenue dans notre application</h1>
+        </div>
+        <div class="message">
+            <p>Bonjour {{data.lastName}},</p>
+            <p>Merci de vous être inscrit à notre application. Pour commencer à l'utiliser, veuillez saisir le code de
+                vérification à 5 chiffres suivant :</p>
+        </div>
+        <div class="code">
+            <p>{{data.verificationCode}}</p>
+        </div>
+        <div class="message">
+            <p>Cordialement,</p>
+        </div>
+        <hr>
+        <div class="footer">
+            <p>BIONEST FRANCE - Services Techniques</p>
+        </div>
+    </div>
+</body>
+
+</html>

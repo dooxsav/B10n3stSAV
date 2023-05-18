@@ -1,5 +1,8 @@
 const { User, Role } = require("../models");
 const bcrypt = require("bcrypt");
+const mailService = require("../services/email.service");
+const MathService = require("../services/math.service");
+const saltRound = 10;
 
 /** Définition de la méthode UserController */
 const UserController = {
@@ -7,14 +10,44 @@ const UserController = {
     res.status(200).json({ message: "UserController Work" });
   },
   createUser_part1: async (req, res, next) => {
-    //! MODIFIER le PASSWORD
-
+    hashedPassword = bcrypt.hashSync(req.body.password, saltRound);
+    req.body.password = hashedPassword;
     const { userName, lastName, firstName, email, phoneNumber, password } =
       req.body;
-    const saltRound = 10;
-    hashedPassword = bcrypt.hashSync(password, saltRound);
-    req.body.password = hashedPassword;
-    res.status(200).send(password);
+
+    const data = {
+      userName,
+      lastName,
+      firstName,
+      email,
+      phoneNumber,
+      password,
+      verificationCode: MathService.generateVerificationCode(),
+    };
+    console.log(data);
+    try {
+      mailService.sendEmail(
+        "CreateUser_part1.mail",
+        data,
+        email,
+        `[BIONEST FRANCE] - Bonjour ${data.firstName}, Créons votre espace personnel`,
+        (success) => {
+          if (success) {
+            console.log("E-mail sent successfully");
+            res.status(200).json({ result: success });
+          } else {
+            console.log("Failed to send e-mail");
+            res.status(500).json({ result: error });
+          }
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message:
+          "Une erreur s'est produite lors de l'envoi du courrier électronique",
+      });
+    }
   },
   createUser_part2: async (res, req, next) => {
     // INJECTER le RoleIdS

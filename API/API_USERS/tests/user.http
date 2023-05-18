@@ -3,9 +3,9 @@ Content-Type: application/json
 
 {
     "userName": "toto",
-    "lastName": "",
-    "firstName": "",
-    "email": "",
+    "lastName": "CONTE",
+    "firstName": "Edouard",
+    "email": "pitexi8932@aicogz.com",
     "phoneNumber": "",
     "password": "toto"
 }
