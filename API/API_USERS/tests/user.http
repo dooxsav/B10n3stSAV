@@ -1,0 +1,11 @@
+POST http://localhost:5000/users/createuser_part1
+Content-Type: application/json
+
+{
+    "userName": "toto",
+    "lastName": "",
+    "firstName": "",
+    "email": "",
+    "phoneNumber": "",
+    "password": "toto"
+}
