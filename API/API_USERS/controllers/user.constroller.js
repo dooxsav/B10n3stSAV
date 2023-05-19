@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const mailService = require("../services/email.service");
 const MathService = require("../services/math.service");
 const saltRound = 10;
+const JWTService = require('../services/JWT.service')
 
 /** Définition de la méthode UserController */
 const UserController = {
@@ -10,8 +11,14 @@ const UserController = {
     res.status(200).json({ message: "UserController Work" });
   },
   createUser_part1: async (req, res, next) => {
+    /** Cryptage du password */
     hashedPassword = bcrypt.hashSync(req.body.password, saltRound);
     req.body.password = hashedPassword;
+
+    /** Creation du JWT */
+    console.log(JWTService.generateToken(req.body))
+
+    /**  */
     const { userName, lastName, firstName, email, phoneNumber, password } =
       req.body;
 
@@ -24,7 +31,7 @@ const UserController = {
       password,
       verificationCode: MathService.generateVerificationCode(),
     };
-    console.log(data);
+
     try {
       mailService.sendEmail(
         "CreateUser_part1.mail",
