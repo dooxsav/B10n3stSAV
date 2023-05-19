@@ -3,18 +3,15 @@ const JWTConfig = require('../config/JWT.config.json')
 
 const JWTService = {
     generateToken: (payload) => {
-        return JWT.sign(payload, JWTConfig.development.secretKey)
+        return JWT.sign(payload, JWTConfig.development.secretKey, {expiresIn: '1h'})
     },
     verifyToken: (token) => {
-        return JWT.verify(token, JWTConfig.development.secretKey).then(
-            decodedToken => {
-                return decodedToken
-            }
-        ).catch(
-            error => {
-                return error.message
-            }
-        )
+        try {
+            const decodedToken = JWT.verify(token, JWTConfig.development.secretKey)
+            return decodedToken
+        } catch (error) {
+            return error.message; 
+        }
     }
 }
 

@@ -15,9 +15,6 @@ const UserController = {
     hashedPassword = bcrypt.hashSync(req.body.password, saltRound);
     req.body.password = hashedPassword;
 
-    /** Creation du JWT */
-    console.log(JWTService.generateToken(req.body))
-
     /**  */
     const { userName, lastName, firstName, email, phoneNumber, password } =
       req.body;
@@ -30,7 +27,11 @@ const UserController = {
       phoneNumber,
       password,
       verificationCode: MathService.generateVerificationCode(),
+      token: token
     };
+
+    /** Creation du JWT */
+    const token = JWTService.generateToken(data)
 
     try {
       mailService.sendEmail(
@@ -56,9 +57,16 @@ const UserController = {
       });
     }
   },
-  createUser_part2: async (res, req, next) => {
+  createUser_part2: async (req, res, next) => {
+    /** Récupération du token */
+    const token = req.params.token;
+
+    const { userName, lastName, firstName, email, phoneNumber, password } = JWTService.verifyToken(req.params.token)
+
+    console.log(userName)
     // INJECTER le RoleIdS
     // INJECTION EN DB
+    /*
     User.create({
       userName,
       lastName,
@@ -79,6 +87,8 @@ const UserController = {
         res.status(201).json(NewUser);
       })
       .catch((error) => next(error));
+      */
+
   },
   getAllUser: async (req, res, next) => {},
   getUserbyPK: async (req, res, next) => {},

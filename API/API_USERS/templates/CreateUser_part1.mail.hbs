@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <style>
         /* Styles CSS */
@@ -27,18 +26,38 @@
         }
 
         .code {
-            font-size: 32px;
-            font-weight: bold;
             text-align: center;
             margin-bottom: 20px;
         }
 
+        .code p {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+
         .footer {
             text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .verification-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
@@ -46,11 +65,18 @@
         </div>
         <div class="message">
             <p>Bonjour {{firstName}},</p>
-            <p>Merci de vous être inscrit à notre application. Pour commencer à l'utiliser, veuillez saisir le code de
-                vérification à 5 chiffres suivant :</p>
+        </div>
+        <div class="message">
+            <p>Merci de vous être inscrit à notre application. Pour commencer à l'utiliser, veuillez saisir dans l'application le code de vérification à 5 chiffres suivant :</p>
         </div>
         <div class="code">
             <p>{{verificationCode}}</p>
+        </div>
+        <div class="message">
+            <p>Si vous avez fermer la page, vous pouvez reprendre l'inscription en cliquant sur le lien suivant :</p>
+        </div>
+        <div class="button-container">
+            <a class="verification-button" href="http://localhost:5000/users/createuser_part2/{{token}}">Poursuivre mon inscription</a>
         </div>
         <div class="message">
             <p>Cordialement,</p>
@@ -61,5 +87,4 @@
         </div>
     </div>
 </body>
-
 </html>
