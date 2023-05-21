@@ -59,12 +59,11 @@ const UserController = {
     }
   },
   createUser_part2: async (req, res, next) => {
-    /** Récupération du token */
     const { verifyCode, token } = req.query;
     const decodedToken = JWTService.verifyToken(token);
 
     if (!decodedToken) {
-      res.status(500).send(decodedToken);
+      return res.status(500).send(decodedToken);
     }
 
     const {
@@ -78,34 +77,30 @@ const UserController = {
     } = decodedToken;
 
     if (verifyCode !== verificationCode) {
-      res.status(500).json("access forbiden");
+      return res.status(403).json("Access forbidden");
     }
 
-    res.status(200).json("access granted");
-    // INJECTER le RoleIdS
-    // INJECTION EN DB
-    /*
-    User.create({
-      userName,
-      lastName,
-      firstName,
-      email,
-      phoneNumber,
-      password,
-      roleIds,
-    })
-      .then((NewUser) => {
-        if (roleIds && roleIds.length) {
-          return Role.findAll({ where: { id: rolesIds } }).then((roles) =>
-            NewUser.setRoles(roles)
-          );
-        }
-      })
-      .then(() => {
-        res.status(201).json(NewUser);
-      })
-      .catch((error) => next(error));
-      */
+    try {
+      const newUser = await User.create({
+        userName,
+        lastName,
+        firstName,
+        email,
+        phoneNumber,
+        password,
+      });
+
+      const roleIds = [1];
+
+      if (roleIds && roleIds.length) {
+        const roles = await Role.findAll({ where: { id: roleIds } });
+        await newUser.setRoles(roles);
+      }
+
+      return res.status(201).json(newUser);
+    } catch (error) {
+      return next(error);
+    }
   },
   getAllUser: async (req, res, next) => {},
   getUserbyPK: async (req, res, next) => {},
