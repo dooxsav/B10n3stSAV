@@ -90,7 +90,7 @@ const UserController = {
         password,
       });
 
-      const roleIds = [1];
+      const roleIds = [1]; // [1] est la valeur USER (par défaut)
 
       if (roleIds && roleIds.length) {
         const roles = await Role.findAll({ where: { id: roleIds } });
