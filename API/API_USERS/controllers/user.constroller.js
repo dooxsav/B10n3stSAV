@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const mailService = require("../services/email.service");
 const MathService = require("../services/math.service");
 const saltRound = 10;
-const JWTService = require('../services/JWT.service')
+const JWTService = require("../services/JWT.service");
 
 /** Définition de la méthode UserController */
 const UserController = {
@@ -19,7 +19,7 @@ const UserController = {
     const { userName, lastName, firstName, email, phoneNumber, password } =
       req.body;
 
-    const data = {
+    const Userdata = {
       userName,
       lastName,
       firstName,
@@ -27,11 +27,12 @@ const UserController = {
       phoneNumber,
       password,
       verificationCode: MathService.generateVerificationCode(),
-      token: token
     };
 
     /** Creation du JWT */
-    const token = JWTService.generateToken(data)
+    const token = JWTService.generateToken(Userdata);
+
+    const data = { ...Userdata, token: token };
 
     try {
       mailService.sendEmail(
@@ -59,11 +60,28 @@ const UserController = {
   },
   createUser_part2: async (req, res, next) => {
     /** Récupération du token */
-    const token = req.params.token;
+    const { verifyCode, token } = req.query;
+    const decodedToken = JWTService.verifyToken(token);
 
-    const { userName, lastName, firstName, email, phoneNumber, password } = JWTService.verifyToken(req.params.token)
+    if (!decodedToken) {
+      res.status(500).send(decodedToken);
+    }
 
-    console.log(userName)
+    const {
+      userName,
+      lastName,
+      firstName,
+      email,
+      phoneNumber,
+      password,
+      verificationCode,
+    } = decodedToken;
+
+    if (verifyCode !== verificationCode) {
+      res.status(500).json("access forbiden");
+    }
+
+    res.status(200).json("access granted");
     // INJECTER le RoleIdS
     // INJECTION EN DB
     /*
@@ -88,7 +106,6 @@ const UserController = {
       })
       .catch((error) => next(error));
       */
-
   },
   getAllUser: async (req, res, next) => {},
   getUserbyPK: async (req, res, next) => {},
