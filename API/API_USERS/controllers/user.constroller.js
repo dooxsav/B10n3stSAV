@@ -96,7 +96,15 @@ const UserController = {
         const roles = await Role.findAll({ where: { id: roleIds } });
         await newUser.setRoles(roles);
       }
-
+      mailService.sendEmail('CreateUser_part2.mail', decodedToken, email, "Bienvenue sur B10n3stSAV !",(success) => {
+        if (success) {
+          console.log("E-mail sent successfully");
+          res.status(200).json({ result: success });
+        } else {
+          console.log("Failed to send e-mail");
+          res.status(500).json({ result: error });
+        }
+      })
       return res.status(201).json(newUser);
     } catch (error) {
       return next(error);
