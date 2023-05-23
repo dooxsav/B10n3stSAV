@@ -8,7 +8,7 @@ const JWTService = require("../services/JWT.service");
 /** Définition de la méthode UserController */
 const UserController = {
   Test: async (req, res, next) => {
-    res.status(200).json({ message: "UserController Work" });
+    res.status(200).json({ message: "Bonjour Florence !" });
   },
   createUser_part1: async (req, res, next) => {
     /** Cryptage du password */
@@ -96,21 +96,36 @@ const UserController = {
         const roles = await Role.findAll({ where: { id: roleIds } });
         await newUser.setRoles(roles);
       }
-      mailService.sendEmail('CreateUser_part2.mail', decodedToken, email, "Bienvenue sur B10n3stSAV !",(success) => {
-        if (success) {
-          console.log("E-mail sent successfully");
-          res.status(200).json({ result: success });
-        } else {
-          console.log("Failed to send e-mail");
-          res.status(500).json({ result: error });
+      mailService.sendEmail(
+        "CreateUser_part2.mail",
+        decodedToken,
+        email,
+        "Bienvenue sur B10n3stSAV !",
+        (success) => {
+          if (success) {
+            console.log("E-mail sent successfully");
+            res.status(200).json({ result: success });
+          } else {
+            console.log("Failed to send e-mail");
+            res.status(500).json({ result: error });
+          }
         }
-      })
+      );
       return res.status(201).json(newUser);
     } catch (error) {
+      console.log(error.message)
       return next(error);
     }
   },
-  getAllUser: async (req, res, next) => {},
+  getAllUser: async (req, res, next) => {
+    try {
+      const allusers = await User.findAll({ include: Role });
+      res.status(200).json({ allusers });
+    } catch (error) {
+      console.log("ERREUR lors de la requête : " + error.message);
+      res.status(500).send(error);
+    }
+  },
   getUserbyPK: async (req, res, next) => {},
   updateUser: async (req, res, next) => {},
   deleteUser: async (req, res, next) => {},
