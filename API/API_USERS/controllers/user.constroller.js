@@ -113,21 +113,46 @@ const UserController = {
       );
       return res.status(201).json(newUser);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
       return next(error);
     }
   },
   getAllUser: async (req, res, next) => {
     try {
       const allusers = await User.findAll({ include: Role });
-      res.status(200).json({ allusers });
+      if (allusers.length === 0) {
+        res.status(200).json({ message: "No user has been found" });
+      } else {
+        res.status(200).json({ allusers });
+      }
     } catch (error) {
       console.log("ERREUR lors de la requête : " + error.message);
       res.status(500).send(error);
     }
   },
-  getUserbyPK: async (req, res, next) => {},
-  updateUser: async (req, res, next) => {},
+  getUserbyPK: async (req, res, next) => {
+    const id = req.query.id;
+    await User.findByPk(id)
+      .then((user) => {
+        res.status(200).json({ user });
+      })
+      .catch((error) => {
+        res.status(500).json(error.message);
+      });
+  },
+  updateUser: async (req, res, next) => {
+    const { dataupdated } = req.body;
+    const id = req.body.id;
+    delete dataupdated.id;
+    await User.update({ dataupdated }, { where: { id: id } })
+      .then((udpateduser) => {
+        res.status(200).json({ udpateduser });
+      })
+      .catch((error) => {
+        res.status(500).json({ message: error.message });
+      });
+  },
+  promoteUser: async (req, res, next) => {},
   deleteUser: async (req, res, next) => {},
 };
 
