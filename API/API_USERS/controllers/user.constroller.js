@@ -4,6 +4,7 @@ const mailService = require("../services/email.service");
 const MathService = require("../services/math.service");
 const saltRound = 10;
 const JWTService = require("../services/JWT.service");
+const SMSService = require('../services/SMS.service');
 
 /** Définition de la méthode UserController */
 const UserController = {
@@ -43,6 +44,7 @@ const UserController = {
         (success) => {
           if (success) {
             console.log("E-mail sent successfully");
+            SMSService.sendSMS("R5CW12K3KRD","0607742756", "Coucou !")
             res.status(200).json({ result: success });
           } else {
             console.log("Failed to send e-mail");
