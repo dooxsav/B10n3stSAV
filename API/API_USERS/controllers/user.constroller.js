@@ -5,7 +5,7 @@ const MathService = require("../services/math.service");
 const saltRound = 10;
 const JWTService = require("../services/JWT.service");
 // const SMSService = require('../services/SMS.service');
-const TWILIOService = require('../services/twilio.service')
+const TWILIOService = require("../services/twilio.service");
 
 /** Définition de la méthode UserController */
 const UserController = {
@@ -45,7 +45,7 @@ const UserController = {
         async (success) => {
           if (success) {
             console.log("E-mail sent successfully");
-           await TWILIOService.sendSMS(phoneNumber, "Bienvenue chez BIONEST")
+            await TWILIOService.sendSMS(phoneNumber, "Bienvenue chez BIONEST");
             res.status(200).json({ result: success });
           } else {
             console.log("Failed to send e-mail");
@@ -155,7 +155,22 @@ const UserController = {
         res.status(500).json({ message: error.message });
       });
   },
-  promoteUser: async (req, res, next) => {},
+  addRoleUser: async (req, res, next) => {
+    const { roleId, userId } = req.body;
+    const role = await Role.findByPk(roleId);
+    const user = await User.findByPk(userId);
+    await user.addRole(role).then((updateuser) => {
+      res.status(200).json({ updateuser });
+    });
+  },
+  removeRoleUser: async (req, res, next) => {
+    const { roleId, userId } = req.body;
+    const role = await Role.findByPk(roleId);
+    const user = await User.findByPk(userId);
+    await user.removeRole(role).then((updateuser) => {
+      res.status(200).json({ updateuser });
+    });
+  },
   deleteUser: async (req, res, next) => {},
 };
 
