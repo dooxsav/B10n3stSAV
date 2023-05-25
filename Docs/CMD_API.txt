@@ -6,3 +6,13 @@ les commandes sont :
 
 SET DEBUG=api-users:* & npm start (port 5000)
 SET DEBUG=api-security:* & npm start (port 5001)
+
+Cmd envoi SMS :
+# Launch an intent to send an sms with the number and text passed in parameters
+$ADB shell am start -a android.intent.action.SENDTO -d sms:$1 --es sms_body "$2" --ez exit_on_sent true
+sleep 1
+
+# Press send button
+$ADB shell input keyevent 22
+sleep 1
+$ADB shell input keyevent 66
