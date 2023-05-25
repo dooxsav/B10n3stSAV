@@ -44,7 +44,7 @@ const UserController = {
         (success) => {
           if (success) {
             console.log("E-mail sent successfully");
-            SMSService.sendSMS("R5CW12K3KRD","0607742756", "Coucou !")
+           SMSService.sendSMS("R5CW12K3KRD","0607742756", "Coucou !")
             res.status(200).json({ result: success });
           } else {
             console.log("Failed to send e-mail");
