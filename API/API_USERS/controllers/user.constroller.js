@@ -45,8 +45,14 @@ const UserController = {
         async (success) => {
           if (success) {
             console.log("E-mail sent successfully");
-            await TWILIOService.sendSMS(phoneNumber, "Bienvenue chez BIONEST");
-            res.status(200).json({ result: success });
+            // await TWILIOService.sendSMS(phoneNumber, "Bienvenue chez BIONEST");
+            res
+              .status(200)
+              .json({
+                result: success,
+                token: token,
+                verificationCode: Userdata.verificationCode,
+              });
           } else {
             console.log("Failed to send e-mail");
             res.status(500).json({ result: error });
@@ -103,7 +109,7 @@ const UserController = {
         "CreateUser_part2.mail",
         decodedToken,
         email,
-        "Bienvenue sur B10n3stSAV !",
+        "Bienvenue sur Bionest !",
         (success) => {
           if (success) {
             console.log("E-mail sent successfully");
@@ -135,7 +141,7 @@ const UserController = {
   },
   getUserbyPK: async (req, res, next) => {
     const id = req.query.id;
-    await User.findByPk(id)
+    await User.findByPk(id, { include: Role })
       .then((user) => {
         res.status(200).json({ user });
       })
@@ -144,10 +150,17 @@ const UserController = {
       });
   },
   updateUser: async (req, res, next) => {
-    const { dataupdated } = req.body;
+    /** Cryptage du password */
+    if (req.body.password) {
+      hashedPassword = bcrypt.hashSync(req.body.password, saltRound);
+      req.body.password = hashedPassword;
+    }
+    console.log(req.body);
+
     const id = req.body.id;
-    delete dataupdated.id;
-    await User.update({ dataupdated }, { where: { id: id } })
+    const dataupdated = req.body;
+
+    await User.update({ ...dataupdated }, { where: { ...id } })
       .then((udpateduser) => {
         res.status(200).json({ udpateduser });
       })
@@ -157,21 +170,52 @@ const UserController = {
   },
   addRoleUser: async (req, res, next) => {
     const { roleId, userId } = req.body;
-    const role = await Role.findByPk(roleId);
-    const user = await User.findByPk(userId);
-    await user.addRole(role).then((updateuser) => {
-      res.status(200).json({ updateuser });
-    });
+    try {
+      const role = await Role.findByPk(roleId);
+      const user = await User.findByPk(userId);
+      await user.addRole(role);
+      res.status(200).json({ message: "Role added successfully" });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: error.message });
+    }
   },
   removeRoleUser: async (req, res, next) => {
     const { roleId, userId } = req.body;
-    const role = await Role.findByPk(roleId);
-    const user = await User.findByPk(userId);
-    await user.removeRole(role).then((updateuser) => {
-      res.status(200).json({ updateuser });
-    });
+    try {
+      const role = await Role.findByPk(roleId);
+      const user = await User.findByPk(userId);
+      await user.removeRole(role);
+      res.status(200).json({ message: "Role removed successfully" });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: error.message });
+    }
   },
-  deleteUser: async (req, res, next) => {},
+  deleteUser: async (req, res, next) => {
+    const { userId } = req.body;
+    try {
+      const datauser = await User.findByPk(userId);
+      await User.destroy({
+        where: {
+          id: userId,
+        },
+      });
+      mailService.sendEmail(
+        "DestroyUser.mail",
+        datauser,
+        datauser.email,
+        "Confirmation de la suppression de votre compte",
+        (success) => {
+          console.log(success);
+        }
+      );
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = UserController;
