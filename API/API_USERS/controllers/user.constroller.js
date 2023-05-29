@@ -212,7 +212,7 @@ const UserController = {
       );
       res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
-      console.log(error.message);
+      console.log("erreur: " + error.message);
       res.status(500).json({ error: error.message });
     }
   },
