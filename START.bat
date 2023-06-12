@@ -14,3 +14,10 @@ timeout /t 5
 REM Démarrer l'API_SECURITY
 cd %BIONEST_API_PATH%\API_SECURITY
 start cmd /k "SET DEBUG=api-security:* & npm start"
+
+REM Attendre 5 secondes
+timeout /t 5
+
+REM Démarrer l'API_PROD
+cd %BIONEST_API_PATH%\API_SECURITY
+start cmd /k "SET DEBUG=api-production:* & npm start"
