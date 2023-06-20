@@ -17,4 +17,6 @@ app.use(cors());
 
 app.use("/", indexRouter);
 
+console.log("Application démarré")
+
 module.exports = app;
