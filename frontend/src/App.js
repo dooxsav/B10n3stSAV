@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import WelcomeComponent from "./features/public/components/welcome.component/welcome.component";
+import WelcomeComponent from "./features/public/pages/welcome.page/welcome.component";
 
 function App() {
   return (

@@ -10,6 +10,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border : solid 1px
-
+    width : 25%;
+    height: 50%;
   }
